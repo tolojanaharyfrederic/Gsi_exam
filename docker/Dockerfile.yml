@@ -1,0 +1,20 @@
+---
+- name: Configure web server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Copy configuration files
+      copy:
+        src: /path/to/config/file
+        dest: /etc/apache2/sites-available/000-default.conf
+
+    - name: Start Apache service
+      service:
+        name: apache2
+        state: started
+
