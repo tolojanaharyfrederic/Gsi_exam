@@ -1,0 +1,24 @@
+---
+- name: AUTOMATIC BACKUP OF RUNNING-CONFIG
+  hosts: CSR1kv
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: CREATE BACKUP DIRECTORY
+      file:
+        path: ./backups/
+        state: directory
+        mode: '0755'
+
+    - name: DISPLAYING THE RUNNING-CONFIG
+      ios_command:
+        commands:
+          - show running-config
+      register: config
+
+    - name: SAVE OUTPUT TO ./backups/
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "./backups/show_run_{{ inventory_hostname }}.txt"
+        mode: '0644'
